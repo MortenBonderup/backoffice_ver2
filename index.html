@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backoffice | SunbeamCars Inc.</title>
+    <link rel="stylesheet" href="css/mystyle.css">
+    <link rel="stylesheet" href="css/tabs.css">
+    <link rel="stylesheet" href="css/modaldialog.css">
+    <link rel="stylesheet" href="css/snackbar.css">
+    <link rel="stylesheet" href="css/tooltip.css">
+</head>
+
+<body>
+    <h2>SunbeamCars Inc. back office system</h2>
+
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Rentalcontracts')" id="defaultOpen">Rental Contracts</button>
+        <button class="tablinks" onclick="openTab(event, 'Cars')">Rental Cars</button>
+        <button class="tablinks" onclick="openTab(event, 'Customers')">Rental Customer</button>
+        <button class="tablinks" onclick="openTab(event, 'Accessories')">Accessories</button>
+    </div>
+
+    <div id="Rentalcontracts" class="tabcontent">
+        <span onclick="this.parentElement.style.display='none'" class="topright">&times;</span>
+        <h3>Rental Contracts</h3>
+        <button type="button" onclick="window.print()">Print...</button>&nbsp;<input type="search" id="contractsearch">
+        <br><br>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>Contract #</th>
+                    <th>Customer #</th>
+                    <th>Registration #</th>
+                    <th>Accessories</th>
+                    <th>Pickup date</th>
+                    <th>Return date</th>
+                    <th>Total cost</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="htmlcontractlist"></tbody>
+        </table>
+    </div>
+
+    <div id="Cars" class="tabcontent">
+        <span onclick="this.parentElement.style.display='none'" class="topright">&times;</span>
+        <h3>Cars</h3>
+        <button type="button" onclick="window.print()">Print...</button>&nbsp;<button type="button" id="myBtn">New
+            car...</button>&nbsp;<input type="search" id="carsearch">
+        <br><br>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>Plate #</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Category</th>
+                    <th>Persons</th>
+                    <th>Suitcases</th>
+                    <th>Supplement</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="htmlcarlist"></tbody>
+        </table>
+
+    </div>
+
+    <div id="Customers" class="tabcontent">
+        <span onclick="this.parentElement.style.display='none'" class="topright">&times;</span>
+        <h3>Customers</h3>
+        <button type="button" onclick="window.print()">Print...</button>&nbsp;<input type="search" id="customersearch">
+        <br><br>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>Customer #</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Street</th>
+                    <th>Number</th>
+                    <th>Postal code &amp; City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="htmlcustomerlist"></tbody>
+        </table>
+    </div>
+
+    <div id="Accessories" class="tabcontent">
+        <span onclick="this.parentElement.style.display='none'" class="topright">&times;</span>
+        <h3>Accessories</h3>
+        <button type="button" onclick="window.print()">Print...</button>
+        <br><br>
+        <table class="tablelist">
+            <thead>
+                <tr>
+                    <th>Accessory #</th>
+                    <th>Item</th>
+                </tr>
+            </thead>
+            <tbody id="htmlaccessorylist"></tbody>
+        </table>
+    </div>
+
+
+    <!-- The Modal dialog -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="form">
+                <fieldset>
+                    <legend>Register new car</legend>
+                    <br>
+                    <label>Plate # <input type="text" id="plate" pattern="sbc[0-9]{5}" maxlength="8" required> like
+                        sbc12345</label><br><br>
+                    <label>Brand: <input type="text" id="brand" required></label><br><br>
+                    <label>Model: <input type="text" id="model" required></label><br><br>
+                    <label>Category:
+                        <select id="category">
+                            <option value="Budget">Budget</option>
+                            <option value="Standard">Standard</option>
+                            <option value="Minivan">Minivan</option>
+                        </select>
+                    </label><br><br>
+                    <label>Persons: <input type="number" id="persons" min="1" max="7" value="1"
+                            required></label><br><br>
+                    <label>Suitcases:
+                        <select id="suitcases">
+                            <option value="0">0 - only a bag</option>
+                            <option value="1">1 suitcase</option>
+                            <option value="2">2 suitcases</option>
+                            <option value="3">3 suitcases</option>
+                            <option value="4">4 suitcases</option>
+                        </select>
+                    </label><br><br>
+                    <label>Supplement pr. day: <input type="number" id="supplement" placeholder="0.00" readonly style="text-align: right;"></label>
+                    dkr. <br><br>
+                    <input type="hidden" id="status" value="Cleaning" readonly>
+                    <br><br>
+                    <button type="button" onclick="modal.style.display = 'none';">Cancel</button>&nbsp;&nbsp;
+                    <button type="submit" id="saveNewCarBtn">&nbsp;Save&nbsp;</button>
+                    <br><br>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <!-- Snackbar div -->
+    <div id="snackbar">Some text some message..</div>
+
+    <script src="js/tabs.js"></script>
+    <script src="js/objectblueprints.js"></script>
+    <script src="js/datafromwebsite.js"></script>
+    <script src="js/modaldialog.js"></script>
+    <script src="js/snackbar.js"></script>
+    <script src="js/javascript.js"></script>
+</body>
+
+</html>

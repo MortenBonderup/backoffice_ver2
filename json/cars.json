@@ -1,0 +1,37 @@
+{
+    "carlist" : [
+    {
+        "reg_plate" : "sbc33477",
+        "brand" : "Suzuki",
+        "model" : "Swift",
+        "image": "images/Suzuki.png",
+        "category" : "Budget",
+        "persons": 4,
+        "suitcases": 0,
+        "supplement": 0,
+        "status": "Ready"
+    },
+    {
+        "reg_plate" : "sbc54645",
+        "brand" : "Mazda",
+        "model" : "CX3",
+        "image" : "images/Mazda.png",
+        "category": "Standard",
+        "persons": 5,
+        "suitcases": 3,
+        "supplement": 60,
+        "status": "Ready"
+    },
+    {
+        "reg_plate" : "sbc12963",
+        "brand": "Citroën",
+        "model": "Grand C4 Picasso",
+        "image": "images/Citroen.png",
+        "category" : "Minivan",
+        "persons": 7,
+        "suitcases" : 4,
+        "supplement" : 105,
+        "status": "Ready"
+    }
+]
+}

@@ -1,0 +1,22 @@
+{
+    "contractlist" : [
+    {
+        "contract_id" : 1,
+        "pickup_date" : "01-06-2023",
+        "return_date": "10-06-2023",
+        "rental_cost": 4750
+    },
+    {
+        "contract_id" : 2,
+        "pickup_date" : "11-08-2023",
+        "return_date": "13-11-2023",
+        "rental_cost": 1798
+    },
+    {
+        "contract_id" : 3,
+        "pickup_date" : "17-09-2023",
+        "return_date": "23-09-2023",
+        "rental_cost": 2543
+    }
+]
+}

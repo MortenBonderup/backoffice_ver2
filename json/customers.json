@@ -1,0 +1,28 @@
+{ 
+    "customerlist" : [
+    {
+        "Customer_id" : 72286339,
+        "Firstname" : "Morten",
+        "Lastname" : "Bonderup",
+        "Street" : "Ringvej Syd",
+        "Number" : 104,
+        "Postalcode_city" : "8260 Viby J"
+    },
+    {
+        "Customer_id" : 72286340,
+        "Firstname" : "Olivia",
+        "Lastname" : "Smith",
+        "Street" : "Restwood Road",
+        "Number" : 14,
+        "Postalcode_city" : "8000 Aarhus C"
+    },
+    {
+        "Customer_id" : 72286341,
+        "Firstname" : "Nina",
+        "Lastname" : "Johnson",
+        "Street" : "Backfire Street",
+        "Number" : 54,
+        "Postalcode_city" : "9000 Aalborg"
+    }
+]
+}

@@ -1,0 +1,32 @@
+{
+    "accessorylist" : [
+    {
+        "accessory_id" : 1,
+        "item" : "Extra driver"
+    },
+    {
+        "accessory_id" : 2,
+        "item" : "Child Seat (5-12 years)"
+    },
+    {
+        "accessory_id" : 3,
+        "item" : "Road Aid"
+    },
+    {
+        "accessory_id" : 4,
+        "item" : "Child Seat (0-1 year)"
+    },
+    {
+        "accessory_id" : 5,
+        "item" : "Child Seat (1-4 year)"
+    },
+    {
+        "accessory_id" : 6,
+        "item" : "GPS navigation"
+    },
+    {
+        "accessory_id" : 7,
+        "item" : "Snow chains"
+    }
+]
+}
