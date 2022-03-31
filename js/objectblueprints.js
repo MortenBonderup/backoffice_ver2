@@ -1,3 +1,84 @@
+// ------------------ Carlist object ------------------ //
+const Carlist = function () {
+    this.cars = [];
+
+    this.registerCar = function (plate, brand, model, category, persons, suitcases, price, status) {
+        const car = new Carobject(plate, brand, model, category, persons, suitcases, price, status);
+        this.cars.push(car);
+    }
+
+    this.showCarList = function () {
+        const output = document.getElementById("htmlcarlist");
+        output.innerHTML = ""; //Cleans output table
+        for (const car of this.cars) {
+            car.showCar();
+        }
+
+        if (this.cars.length === 0) { // If no cars on the list ...
+            output.innerHTML = "<tr><td>No more cars to show</td></tr>";
+        }
+    }
+
+    this.deleteCar = function (id, hasContract) {
+        const doesNotExist = -1;
+        const ok = confirm("Do you really want to delete this car ?");
+        let index = 0; //Keep track of index in the car object list
+        const snackbar = document.getElementById("snackbar");
+        if (ok && !hasContract) {
+            for (const car of this.cars) {
+                if (car.registration_plate === id) {
+                    this.cars.splice(index, 1); // Removes the car from car object list
+                }
+                index++; //Add 1 to index
+            }
+            this.showCarList();
+            snackbar.innerHTML = "Car with plate: " + id + " was deleted";
+        } else {
+            snackbar.innerHTML = "No car was deleted. Either you canceled<br>or car has active rental contract.";
+        }
+
+        showSnackbar();
+    }
+
+    this.changeCarStatus = function (id, oldStatus) {
+        const validStatus = ["Cleaning", "Dirty", "Ready"];
+        const newStatus = document.getElementById(id).value;
+        const snackbar = document.getElementById("snackbar");
+        if (validStatus.indexOf(newStatus) !== -1) { // if new status is valid
+            for (const car of this.cars) {
+                if (car.registration_plate === id) {
+                    this.status = newStatus;
+                }
+            }
+            snackbar.innerHTML = "Status changed to " + newStatus + " for car with plate: " + id;
+        } else {
+            //Change back to old status
+            const selectbox = document.getElementById(id);
+            selectbox.value = oldStatus;
+            snackbar.innerHTML = "Nothing was changed";
+        }
+        showSnackbar();
+
+    }
+
+    // Returns index position in carlist for a given car (by its plate)
+    // If the car does not exist - return -1
+    this.doesCarExist = function (plate) {
+        const doesNotExist = -1;
+        let index = 0;
+        for (const car of this.cars) {
+            if (car.registration_plate === plate) {
+                return index;
+            }
+            index++;
+        }
+        return doesNotExist;
+    }
+
+}
+// ---------------------------------------------- //
+
+
 // --------------- Car object ---------------- //
 
 const Carobject = function (plate, brand, model, category, persons, suitcases, price, status) {
@@ -27,14 +108,14 @@ const Carobject = function (plate, brand, model, category, persons, suitcases, p
         <td>${this.suitcases}</td> 
         <td>dkr. ${this.category_price},-</td> 
         <td>
-        <select id="${this.registration_plate}" onchange="Carobject.changeCarStatus('${this.registration_plate}', '${this.status}');">
+        <select id="${this.registration_plate}" onchange="carlist.changeCarStatus('${this.registration_plate}', '${this.status}');">
             <option value="0" selected>Select an option:</option>
             <option value="Cleaning">Cleaning</option>
             <option value="Dirty">Dirty</option>
             <option value="Ready">Ready</option>
         </select>
         </td>
-        <td><button type="button" onclick="Carobject.deleteCar('${this.registration_plate}', ${this.getHasActiveContract()})">Delete...</button></td>
+        <td><button type="button" onclick="carlist.deleteCar('${this.registration_plate}', ${this.getHasActiveContract()})">Delete...</button></td>
         </tr>`;
 
         output.insertAdjacentHTML("beforeend", template);
@@ -45,6 +126,7 @@ const Carobject = function (plate, brand, model, category, persons, suitcases, p
 
     }
 
+
     this.setHasActiveContract = function (status) {
         this.hasActiveContract = status;
     }
@@ -53,66 +135,52 @@ const Carobject = function (plate, brand, model, category, persons, suitcases, p
         return this.hasActiveContract;
     }
 
+} // ------ End of car object constructor--------- //
 
-    Carobject.changeCarStatus = function (id, oldStatus) {
-        const validStatus = ["Cleaning", "Dirty", "Ready"];
-        const newStatus = document.getElementById(id).value;
-        const snackbar = document.getElementById("snackbar");
-        console.log(newStatus);
-        if (validStatus.indexOf(newStatus) !== -1) { // if new status is valid
-            for (const car of carlist) {
-                if (car.registration_plate === id) {
-                    this.status = newStatus;
-                }
-            }
-            snackbar.innerHTML = "Status changed to " + newStatus + " for car with plate: " + id;
-        } else {
-            //Change back to old status
-            const selectbox = document.getElementById(id);
-            selectbox.value = oldStatus;
-            console.log(oldStatus);
-            snackbar.innerHTML = "Nothing was changed";
+// ------------- Customerlist object ------------- //
+
+const Customerlist = function () {
+    this.customers = [];
+
+    this.registerCustomer = function (customerid, firstname, lastname, street, number, postalcode_city) {
+        const customer = new Customerobject(customerid, firstname, lastname, street, number, postalcode_city);
+        this.customers.push(customer);
+    }
+
+    this.showCustomerList = function () {
+        const output = document.getElementById("htmlcustomerlist");
+        output.innerHTML = ""; //Cleans output table
+        for (const customer of this.customers) {
+            customer.showCustomer();
         }
-        showSnackbar();
+
+        if (this.customers.length === 0) { // If no customers on the list ...
+            output.innerHTML = "<tr><td>No more customers to show</td></tr>";
+        }
 
     }
 
-    Carobject.deleteCar = function (id, hasContract) {
-        const doesNotExist = -1;
-        const ok = confirm("Do you really want to delete this car ?");
-        let index = 0; //Keep track of index in the car object list
+    this.deleteCustomer = function (id, hasContract) {
+        const ok = confirm("Do you really want to delete this customer ?");
+        let index = 0; //Keep track of index in the customer object list
         const snackbar = document.getElementById("snackbar");
         if (ok && !hasContract) {
-            for (const car of carlist) {
-                if (car.registration_plate === id) {
-                    carlist.splice(index, 1); // Removes the car from car object list
+            for (const customer of this.customers) {
+                if (customer.customer_id === id) {
+                    this.customers.splice(index, 1); // Removes the customer from customer object list
                 }
                 index++; //Add 1 to index
             }
-            Carobject.showCarList();
-            snackbar.innerHTML = "Car with plate: " + id + " was deleted";
+            this.showCustomerList();
+            snackbar.innerHTML = "Customer id #" + id + " was deleted";
         } else {
-            snackbar.innerHTML = "No car was deleted. Either you canceled<br>or car has active rental contract.";
+            snackbar.innerHTML = "No customer was deleted. Either you canceled<br>or customer has an active rental contract.";
         }
 
         showSnackbar();
     }
-
-    // Returns index position in carlist for a given car (by its plate)
-    // If the car does not exist - return -1
-    Carobject.doesCarExist = function (plate) {
-        const doesNotExist = -1;
-        let index = 0;
-        for (const car of carlist) {
-            if (car.registration_plate === plate) {
-                return index;
-            }
-            index++;
-        }
-        return doesNotExist;
-    }
-
-} // ------ End of car object constructor--------- //
+}
+// ---------------------------------------------- //
 
 // ---------- Customer object ----------- //
 
@@ -138,7 +206,7 @@ const Customerobject = function (customerid, firstname, lastname, street, number
             <td>${this.street}</td> 
             <td>${this.number}</td> 
             <td>${this.postal_code_city}</td> 
-            <td><button type="button" onclick="Customerobject.deleteCustomer(${this.customer_id}, ${this.getHasActiveContract()})">Delete...</button></td>
+            <td><button type="button" onclick="customerlist.deleteCustomer(${this.customer_id}, ${this.getHasActiveContract()})">Delete...</button></td>
             </tr>`;
 
         output.insertAdjacentHTML("beforeend", template);
@@ -153,44 +221,59 @@ const Customerobject = function (customerid, firstname, lastname, street, number
         return this.hasActiveContract;
     }
 
-    // -------- Static methods - works with customer object list -------- //
-    Customerobject.showCustomerList = function () {
-        const output = document.getElementById("htmlcustomerlist");
+} // --------- End of customer object constructor ---------- //
+
+// -------------- Contract list object -------------- //
+const Contractlist = function () {
+    this.contracts = [];
+
+    this.registerContract = function (contractid, pickupdate, returndate, cost) {
+        const contract = new Contractobject(contractid, pickupdate, returndate, cost);
+        this.contracts.push(contract);
+    }
+
+    this.showContractList = function () {
+        const output = document.getElementById("htmlcontractlist");
         output.innerHTML = ""; //Cleans output table
-        for (const customer of customerlist) {
-            customer.showCustomer();
+        for (const contract of this.contracts) {
+            contract.showContract();
         }
 
-        if (customerlist.length === 0) { // If no customers on the list ...
-            output.innerHTML = "<tr><td>No more customers to show</td></tr>";
+        if (this.contracts.length === 0) { // If no contracts in the list ...
+            output.innerHTML = "<tr><td>No more contracts to show</td></tr>";
         }
 
     }
 
-    Customerobject.deleteCustomer = function (id, hasContract) {
-        const ok = confirm("Do you really want to delete this customer ?");
-        let index = 0; //Keep track of index in the customer object list
+    this.deleteContract = function (id) {
+        const ok = confirm("Do you really want to delete this rental contract ?");
+        let index = 0; //Keep track of index in the contract object list
         const snackbar = document.getElementById("snackbar");
-        if (ok && !hasContract) {
-            for (const customer of customerlist) {
-                if (customer.customer_id === id) {
-                    customerlist.splice(index, 1); // Removes the customer from customer object list
+        if (ok) {
+            for (const contract of this.contracts) {
+                if (contract.contract_id === id) {
+                    contract.car.setHasActiveContract(false);
+                    contract.customer.setHasActiveContract(false);
+                    this.contracts.splice(index, 1); // Removes the contract from contract object list
                 }
                 index++; //Add 1 to index
             }
-            Customerobject.showCustomerList();
-            snackbar.innerHTML = "Customer id #" + id + " was deleted";
+            this.showContractList();
+            carlist.showCarList();
+            customerlist.showCustomerList();
+            snackbar.innerHTML = "Rental contract #" + id + " was deleted";
         } else {
-            snackbar.innerHTML = "No customer was deleted. Either you canceled<br>or customer has an active rental contract.";
+            snackbar.innerHTML = "No rental contract was deleted";
         }
 
         showSnackbar();
     }
 
-} // --------- End of customer object constructor ---------- //
+
+}
+// -------------------------------------------------- //
 
 // -------------- Contract object -------------- //
-
 const Contractobject = function (contractid, pickupdate, returndate, cost) {
     // ------CONSTRUCTOR ------ //
     // ------ Attributes ------ //
@@ -207,10 +290,10 @@ const Contractobject = function (contractid, pickupdate, returndate, cost) {
         const output = document.getElementById("htmlcontractlist");
         let template = `
             <tr class="contractrow">
-            <td>${this.contract_id}</td> 
-            <td class="tooltip">${this.customer.customer_id}<span class="tooltiptext">${this.customer.first_name}<br>${this.customer.last_name}</span></td> 
+            <td>${this.contract_id}</td>
+            <td class="tooltip">${this.customer.customer_id}<span class="tooltiptext">${this.customer.first_name}<br>${this.customer.last_name}</span></td>
             <td class="tooltip">${this.car.registration_plate}<span class="tooltiptext">${this.car.car_brand}<br>${this.car.car_model}</span></td><td>`
-
+        
         for (const accessory of this.accessory_list) {
             template += `${accessory.item}, `
         }
@@ -218,52 +301,38 @@ const Contractobject = function (contractid, pickupdate, returndate, cost) {
         template += `</td><td>${this.pickup_date}</td> 
             <td>${this.return_date}</td>
             <td>dkr. ${this.rental_cost},-</td>  
-            <td><button type="button" onclick="Contractobject.deleteContract(${this.contract_id})">Delete...</button></td>
+            <td><button type="button" onclick="contractlist.deleteContract(${this.contract_id})">Delete...</button></td>
             </tr>`;
 
         output.insertAdjacentHTML("beforeend", template);
 
     }
 
-    // -------- Static methods - works with contract object list --------- //
-    Contractobject.showContractList = function () {
-        const output = document.getElementById("htmlcontractlist");
-        output.innerHTML = ""; //Cleans output table
-        for (const contract of contractlist) {
-            contract.showContract();
-        }
-
-        if (contractlist.length === 0) { // If no contracts in the list ...
-            output.innerHTML = "<tr><td>No more contracts to show</td></tr>";
-        }
-
-    }
-
-    Contractobject.deleteContract = function (id) {
-        const ok = confirm("Do you really want to delete this rental contract ?");
-        let index = 0; //Keep track of index in the contract object list
-        const snackbar = document.getElementById("snackbar");
-        if (ok) {
-            for (const contract of contractlist) {
-                if (contract.contract_id === id) {
-                    contract.car.setHasActiveContract(false);
-                    contract.customer.setHasActiveContract(false);
-                    contractlist.splice(index, 1); // Removes the contract from contract object list
-                }
-                index++; //Add 1 to index
-            }
-            Contractobject.showContractList();
-            Carobject.showCarList();
-            Customerobject.showCustomerList();
-            snackbar.innerHTML = "Rental contract #" + id + " was deleted";
-        } else {
-            snackbar.innerHTML = "No rental contract was deleted";
-        }
-
-        showSnackbar();
-    }
-
 } // --------- End of contract object constructor ---------- //
+
+// --------------- Accessory object ------------ //
+const Accessorylist = function () {
+    this.accessories = [];
+
+    this.registerAccessory = function (accessory_id, item) {
+        const accessory = new Accessoryobject(accessory_id, item);
+        this.accessories.push(accessory);
+    }
+
+    this.showAccessoryList = function () {
+        const output = document.getElementById("htmlaccessorylist");
+        output.innerHTML = ""; //Cleans output table
+        for (const accessory of this.accessories) {
+            accessory.showAccessory();
+        }
+
+        if (this.accessories.length === 0) { // If no accessories on the list ...
+            output.innerHTML = "<tr><td>No more accessories to show</td></tr>";
+        }
+
+    }
+}
+
 
 // --------------- Accessory object ------------ //
 const Accessoryobject = function (accessoryid, item) {
@@ -282,20 +351,6 @@ const Accessoryobject = function (accessoryid, item) {
             </tr>`;
 
         output.insertAdjacentHTML("beforeend", template);
-
-    }
-
-    // ------- Static methods - works with accessory object list --------- //
-    Accessoryobject.showAccessoryList = function () {
-        const output = document.getElementById("htmlaccessorylist");
-        output.innerHTML = ""; //Cleans output table
-        for (const accessory of accessorylist) {
-            accessory.showAccessory();
-        }
-
-        if (accessorylist.length === 0) { // If no accessories on the list ...
-            output.innerHTML = "<tr><td>No more accessories to show</td></tr>";
-        }
 
     }
 

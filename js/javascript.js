@@ -5,7 +5,7 @@ form.addEventListener("submit", function (e) {
     const doesNotAlreadyExist = -1;
     const reg_plate = document.getElementById("plate").value;
 
-    if (Carobject.doesCarExist(reg_plate) === doesNotAlreadyExist) {
+    if (carlist.doesCarExist(reg_plate) === doesNotAlreadyExist) {
         const brand = document.getElementById("brand").value;
         const model = document.getElementById("model").value;
         const category = document.getElementById("category").value;
@@ -13,8 +13,8 @@ form.addEventListener("submit", function (e) {
         const suitcases = document.getElementById("suitcases").value;
         const supplement = getSupplementByCategory(category);
         const status = document.getElementById("status").value;
-        carlist.push(new Carobject(reg_plate, brand, model, category, persons, suitcases, supplement, status));
-        Carobject.showCarList();
+        carlist.registerCar(reg_plate, brand, model, category, persons, suitcases, supplement, status);
+        carlist.showCarList();
         modal.style.display = "none"; // Close modal dialog
         snackbar.innerHTML = "The new car was saved";
     } else {
