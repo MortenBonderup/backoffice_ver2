@@ -54,20 +54,6 @@ const Carobject = function (plate, brand, model, category, persons, suitcases, p
     }
 
 
-    // -------- Static methods - works with car object list --------- //
-    Carobject.showCarList = function () {
-        const output = document.getElementById("htmlcarlist");
-        output.innerHTML = ""; //Cleans output table
-        for (const car of carlist) {
-            car.showCar();
-        }
-
-        if (carlist.length === 0) { // If no cars on the list ...
-            output.innerHTML = "<tr><td>No more cars to show</td></tr>";
-        }
-
-    }
-
     Carobject.changeCarStatus = function (id, oldStatus) {
         const validStatus = ["Cleaning", "Dirty", "Ready"];
         const newStatus = document.getElementById(id).value;
