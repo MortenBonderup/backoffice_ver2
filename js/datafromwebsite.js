@@ -1,6 +1,6 @@
 const carlist = new Carlist(); // Defining carlist as a global object array
 const customerlist = new Customerlist(); // Defining cutomerlist as a global object array
-const accessorylist = new Accessorylist; // Defining accessorylist as a global object array
+const accessorylist = new Accessorylist(); // Defining accessorylist as a global object array
 const contractlist = new Contractlist(); // Defining rental contracts list as a global object array
 
 fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
@@ -11,7 +11,7 @@ fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
         let index=0;
         for (const car of post.carlist) {
             carlist.registerCar(car.reg_plate, car.brand, car.model, car.category, car.persons, car.suitcases, car.supplement, car.status);
-            carlist.cars[index].setHasActiveContract(true);
+            carlist.cars[index].setHasActiveContract(true); // Simulate that car has contract
             index++;
         }
         carlist.showCarList();
@@ -24,7 +24,7 @@ fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
                 let index = 0;
                 for (const customer of post.customerlist) {
                     customerlist.registerCustomer(customer.Customer_id, customer.Firstname, customer.Lastname, customer.Street, customer.Number, customer.Postalcode_city);
-                    customerlist.customers[index].setHasActiveContract(true);
+                    customerlist.customers[index].setHasActiveContract(true); // // Simulate that customer has contract
                     index++;
                 }
                 customerlist.showCustomerList();

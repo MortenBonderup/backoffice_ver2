@@ -126,7 +126,6 @@ const Carobject = function (plate, brand, model, category, persons, suitcases, p
 
     }
 
-
     this.setHasActiveContract = function (status) {
         this.hasActiveContract = status;
     }
@@ -268,8 +267,6 @@ const Contractlist = function () {
 
         showSnackbar();
     }
-
-
 }
 // -------------------------------------------------- //
 
