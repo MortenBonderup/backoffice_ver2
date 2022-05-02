@@ -11,7 +11,7 @@ fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
         let index=0;
         for (const car of post.carlist) {
             carlist.registerCar(car.reg_plate, car.brand, car.model, car.category, car.persons, car.suitcases, car.supplement, car.status);
-            carlist.cars[index].setHasActiveContract(true); // Simulate that car has contract
+            // carlist.cars[index].setHasActiveContract(true); // Simulate that car has contract
             index++;
         }
         carlist.showCarList();
@@ -24,7 +24,7 @@ fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
                 let index = 0;
                 for (const customer of post.customerlist) {
                     customerlist.registerCustomer(customer.Customer_id, customer.Firstname, customer.Lastname, customer.Street, customer.Number, customer.Postalcode_city);
-                    customerlist.customers[index].setHasActiveContract(true); // // Simulate that customer has contract
+                    // customerlist.customers[index].setHasActiveContract(true); // // Simulate that customer has contract
                     index++;
                 }
                 customerlist.showCustomerList();
@@ -43,17 +43,8 @@ fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
                                 return data.json();
                             })
                             .then(function (post) {
-                                let index = 0;
                                 for (const contract of post.contractlist) {
-                                    contractlist.registerContract(contract.contract_id, contract.pickup_date, contract.return_date, contract.rental_cost);
-
-                                    // Aggregation examples
-                                    contractlist.contracts[index].customer = customerlist.customers[index];
-                                    contractlist.contracts[index].car = carlist.cars[index];
-                                    contractlist.contracts[index].accessory_list.push(accessorylist.accessories[index]);
-                                    contractlist.contracts[index].accessory_list.push(accessorylist.accessories[index + 1]);
-                                    
-                                    index++;
+                                    contractlist.registerContract(contract.contract_id, contract.pickup_date, contract.return_date, contract.rental_cost, contract.customer, contract.car, contract.accessorylist);
                                 }
                                 contractlist.showContractList();
                             })
