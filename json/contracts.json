@@ -4,16 +4,6 @@
             "pickup_date": "01-06-2023",
             "return_date": "10-06-2023",
             "rental_cost": 4750,
-            "customer": {
-                "customer_id": 72286339,
-                "first_name": "Morten",
-                "last_name": "Bonderup"
-            },
-            "car": {
-                "registration_plate": "sbc33477",
-                "car_brand": "Suzuki",
-                "car_model": "Swift"
-            },
             "accessorylist": [{
                     "accessory_id": 1,
                     "item": "Extra driver"
@@ -29,16 +19,6 @@
             "pickup_date": "11-08-2023",
             "return_date": "13-11-2023",
             "rental_cost": 1798,
-            "customer": {
-                "customer_id": 72286340,
-                "first_name": "Olivia",
-                "last_name": "Smith"
-            },
-            "car": {
-                "registration_plate": "sbc33477",
-                "car_brand": "Mazda",
-                "car_model": "CX3"
-            },
             "accessorylist": [{
                     "accessory_id": 3,
                     "item": "Road Aid"
@@ -54,16 +34,6 @@
             "pickup_date": "17-09-2023",
             "return_date": "23-09-2023",
             "rental_cost": 2543,
-            "customer": {
-                "customer_id": 72286341,
-                "first_name": "Nina",
-                "last_name": "Johnson"
-            },
-            "car": {
-                "registration_plate": "sbc12963",
-                "car_brand": "Citroën",
-                "car_model": "Grand C4 Picasso"
-            },
             "accessorylist": [{
                 "accessory_id": 5,
                 "item": "Child Seat (1-4 year)"

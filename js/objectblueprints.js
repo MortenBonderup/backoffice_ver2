@@ -17,6 +17,7 @@ const Carlist = (function () {
         registerCar(plate, brand, model, category, persons, suitcases, price, status) {
             const car = new Carobject(plate, brand, model, category, persons, suitcases, price, status);
             _(this).cars.push(car);
+            return car; // for aggregation
         }
 
         showCarList() {
@@ -139,7 +140,7 @@ const Carobject = (function () {
             <option value="Ready">Ready</option>
         </select>
         </td>
-        <td><button type="button" onclick="carlist.deleteCar('${_(this).registration_plate}', ${this.getHasActiveContract()})">Delete...</button></td>
+        <td><button type="button" onclick="carlist.deleteCar('${_(this).registration_plate}', ${this.hasActiveContract})">Delete...</button></td>
         </tr>`;
 
             output.insertAdjacentHTML("beforeend", template);
@@ -150,11 +151,11 @@ const Carobject = (function () {
 
         }
 
-        setHasActiveContract(status) {
+        set hasActiveContract(status) {
             _(this).hasActiveContract = status;
         }
 
-        getHasActiveContract() {
+        get hasActiveContract() {
             return _(this).hasActiveContract;
         }
 
@@ -189,12 +190,13 @@ const Customerlist = (function () {
             priv.set(this, customers);
         }
 
-        registerCustomer = function (customerid, firstname, lastname, street, number, postalcode_city) {
+        registerCustomer(customerid, firstname, lastname, street, number, postalcode_city) {
             const customer = new Customerobject(customerid, firstname, lastname, street, number, postalcode_city);
             _(this).customers.push(customer);
+            return customer; // for aggregation
         }
 
-        showCustomerList = function () {
+        showCustomerList() {
             const output = document.getElementById("htmlcustomerlist");
             output.innerHTML = ""; //Cleans output table
             for (const customer of _(this).customers) {
@@ -206,14 +208,14 @@ const Customerlist = (function () {
             }
         }
 
-        deleteCustomer = function (id, hasContract) {
+        deleteCustomer(id, hasContract) {
             const ok = confirm("Do you really want to delete this customer ?");
             let index = 0; //Keep track of index in the customer object list
             const snackbar = document.getElementById("snackbar");
             if (ok && !hasContract) {
                 for (const customer of _(this).customers) {
-                    if (customer.customer_id === id) {
-                        this.customers.splice(index, 1); // Removes the customer from customer object list
+                    if (customer.customerId === id) {
+                        _(this).customers.splice(index, 1); // Removes the customer from customer object list
                     }
                     index++; //Add 1 to index
                 }
@@ -254,7 +256,7 @@ const Customerobject = (function () {
             priv.set(this, customer);
         }
 
-        showCustomer = function () {
+        showCustomer() {
             const output = document.getElementById("htmlcustomerlist");
             const template = `
             <tr class="customerrow">
@@ -264,19 +266,23 @@ const Customerobject = (function () {
             <td>${_(this).street}</td> 
             <td>${_(this).number}</td> 
             <td>${_(this).postal_code_city}</td> 
-            <td><button type="button" onclick="customerlist.deleteCustomer(${_(this).customer_id}, ${this.getHasActiveContract()})">Delete...</button></td>
+            <td><button type="button" onclick="customerlist.deleteCustomer(${_(this).customer_id}, ${this.hasActiveContract})">Delete...</button></td>
             </tr>`;
 
             output.insertAdjacentHTML("beforeend", template);
 
         }
 
-        setHasActiveContract = function (status) {
+        set hasActiveContract(status) {
             _(this).hasActiveContract = status;
         }
 
-        getHasActiveContract = function () {
+        get hasActiveContract() {
             return _(this).hasActiveContract;
+        }
+
+        get customerId() {
+            return _(this).customer_id;
         }
 
     }
@@ -326,11 +332,12 @@ const Contractlist = (function () {
             let index = 0; //Keep track of index in the contract object list
             const snackbar = document.getElementById("snackbar");
             if (ok) {
+
                 for (const contract of _(this).contracts) {
-                    if (contract.contract_id === id) {
-                        contract.car.setHasActiveContract(false);
-                        contract.customer.setHasActiveContract(false);
-                        this.contracts.splice(index, 1); // Removes the contract from contract object list
+                    if (contract.contractId === id) {
+                        contract.car.hasActiveContract = false;
+                        contract.customer.hasActiveContract = false;
+                        _(this).contracts.splice(index, 1); // Removes the contract from contract object list
                     }
                     index++; //Add 1 to index
                 }
@@ -352,41 +359,58 @@ const Contractlist = (function () {
 // -------------------------------------------------- //
 
 // -------------- Contract object -------------- //
-const Contractobject = function (contractid, pickupdate, returndate, cost, customer, car, accessories) {
-    // ------CONSTRUCTOR ------ //
-    // ------ Attributes ------ //
-    this.contract_id = contractid;
-    this.customer = customer; // Aggregation
-    this.car = car; // Aggregation
-    this.accessory_list = accessories; // Aggregation
-    this.pickup_date = pickupdate;
-    this.return_date = returndate;
-    this.rental_cost = cost;
-    // ------------------------ //
 
-    this.showContract = function () {
-        const output = document.getElementById("htmlcontractlist");
-        let template = `
-            <tr class="contractrow">
-            <td>${this.contract_id}</td>
-            <td class="tooltip">${this.customer.customer_id}<span class="tooltiptext">${this.customer.first_name}<br>${this.customer.last_name}</span></td>
-            <td class="tooltip">${this.car.registration_plate}<span class="tooltiptext">${this.car.car_brand}<br>${this.car.car_model}</span></td><td>`
+const Contractobject = (function () {
+    "use strict";
+    const priv = new WeakMap();
+    const _ = function (instance) {
+        return priv.get(instance);
+    };
 
-        for (const accessory of this.accessory_list) {
-            template += `${accessory.item}, `
+    class ContractobjectClass {
+        constructor(contractid, pickupdate, returndate, cost, customer, car, accessories) {
+            const attributes = {
+                contract_id: contractid,
+                customer: customer, // Aggregation
+                car: car, // Aggregation
+                accessory_list: accessories, // Aggregation
+                pickup_date: pickupdate,
+                return_date: returndate,
+                rental_cost: cost
+            }
+
+            priv.set(this, attributes);
         }
 
-        template += `</td><td>${this.pickup_date}</td> 
-            <td>${this.return_date}</td>
-            <td>dkr. ${this.rental_cost},-</td>  
-            <td><button type="button" onclick="contractlist.deleteContract(${this.contract_id})">Delete...</button></td>
+        get contractId() {
+            return _(this).contract_id;
+        }
+
+        showContract() {
+            const output = document.getElementById("htmlcontractlist");
+            let template = `
+            <tr class="contractrow">
+            <td>${_(this).contract_id}</td>
+            <td class="tooltip">${_(this).customer.customerId}<span class="tooltiptext">${_(this).customer.first_name}<br>${_(this).customer.last_name}</span></td>
+            <td class="tooltip">${_(this).car.registrationPlate}<span class="tooltiptext">${_(this).car.car_brand}<br>${_(this).car.car_model}</span></td><td>`
+
+            for (const accessory of _(this).accessory_list) {
+                template += `${accessory.item}, `
+            }
+
+            template += `</td><td>${_(this).pickup_date}</td> 
+            <td>${_(this).return_date}</td>
+            <td>dkr. ${_(this).rental_cost},-</td>  
+            <td><button type="button" onclick="contractlist.deleteContract(${_(this).contract_id})">Delete...</button></td>
             </tr>`;
 
-        output.insertAdjacentHTML("beforeend", template);
+            output.insertAdjacentHTML("beforeend", template);
 
+        }
     }
+    return ContractobjectClass;
 
-}
+}());
 // ------------------------------------------- //
 
 // --------------- Accessory list object ------------ //
