@@ -13,7 +13,7 @@ fetch("json/cars.json") // -------- Fetching cars from cars.json -------- //
         let index = 0;
         for (const car of post.carlist) {
             carobj[index] = carlist.registerCar(car.reg_plate, car.brand, car.model, car.category, car.persons, car.suitcases, car.supplement, car.status);
-            // for aggregation
+             // for aggregation
             if (index < 3) {
                 carobj[index].hasActiveContract = true; // Simulate that car has contract
                 index++;

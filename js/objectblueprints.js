@@ -115,7 +115,7 @@ const Carobject = (function () {
                 suitcases: suitcases,
                 category_price: price,
                 status: status,
-                hasActiveContract: false // Will be born with no active contract
+                activeContract: false // Will be born with no active contract
             }
 
             priv.set(this, attributes);
@@ -152,11 +152,11 @@ const Carobject = (function () {
         }
 
         set hasActiveContract(status) {
-            _(this).hasActiveContract = status;
+            _(this).activeContract = status;
         }
 
         get hasActiveContract() {
-            return _(this).hasActiveContract;
+            return _(this).activeContract;
         }
 
         get registrationPlate() {
@@ -165,6 +165,14 @@ const Carobject = (function () {
 
         set status(value) {
             _(this).status = value;
+        }
+
+        get carBrand() {
+            return _(this).car_brand;
+        }
+
+        get carModel() {
+            return _(this).car_model;
         }
     }
 
@@ -251,7 +259,7 @@ const Customerobject = (function () {
                 street: street,
                 number: number,
                 postal_code_city: postalcode_city,
-                hasActiveContract: false // Will be born with no active contract
+                activeContract: false // Will be born with no active contract
             };
             priv.set(this, customer);
         }
@@ -274,15 +282,23 @@ const Customerobject = (function () {
         }
 
         set hasActiveContract(status) {
-            _(this).hasActiveContract = status;
+            _(this).activeContract = status;
         }
 
         get hasActiveContract() {
-            return _(this).hasActiveContract;
+            return _(this).activeContract;
         }
 
         get customerId() {
             return _(this).customer_id;
+        }
+
+        get firstName() {
+            return _(this).first_name;
+        }
+
+        get lastName() {
+            return _(this).last_name;
         }
 
     }
@@ -334,6 +350,7 @@ const Contractlist = (function () {
             if (ok) {
 
                 for (const contract of _(this).contracts) {
+                    console.log(contract.car);
                     if (contract.contractId === id) {
                         contract.car.hasActiveContract = false;
                         contract.customer.hasActiveContract = false;
@@ -391,8 +408,8 @@ const Contractobject = (function () {
             let template = `
             <tr class="contractrow">
             <td>${_(this).contract_id}</td>
-            <td class="tooltip">${_(this).customer.customerId}<span class="tooltiptext">${_(this).customer.first_name}<br>${_(this).customer.last_name}</span></td>
-            <td class="tooltip">${_(this).car.registrationPlate}<span class="tooltiptext">${_(this).car.car_brand}<br>${_(this).car.car_model}</span></td><td>`
+            <td class="tooltip">${_(this).customer.customerId}<span class="tooltiptext">${_(this).customer.firstName}<br>${_(this).customer.lastName}</span></td>
+            <td class="tooltip">${_(this).car.registrationPlate}<span class="tooltiptext">${_(this).car.carBrand}<br>${_(this).car.carModel}</span></td><td>`
 
             for (const accessory of _(this).accessory_list) {
                 template += `${accessory.item}, `
