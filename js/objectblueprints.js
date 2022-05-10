@@ -350,7 +350,6 @@ const Contractlist = (function () {
             if (ok) {
 
                 for (const contract of _(this).contracts) {
-                    console.log(contract.car);
                     if (contract.contractId === id) {
                         contract.car.hasActiveContract = false;
                         contract.customer.hasActiveContract = false;
@@ -388,8 +387,6 @@ const Contractobject = (function () {
         constructor(contractid, pickupdate, returndate, cost, customer, car, accessories) {
             const attributes = {
                 contract_id: contractid,
-                customer: customer, // Aggregation
-                car: car, // Aggregation
                 accessory_list: accessories, // Aggregation
                 pickup_date: pickupdate,
                 return_date: returndate,
@@ -397,6 +394,10 @@ const Contractobject = (function () {
             }
 
             priv.set(this, attributes);
+            
+            // P U B L I C attributes
+            this.customer = customer; // Aggregation
+            this.car = car; // Aggregation
         }
 
         get contractId() {
@@ -408,8 +409,8 @@ const Contractobject = (function () {
             let template = `
             <tr class="contractrow">
             <td>${_(this).contract_id}</td>
-            <td class="tooltip">${_(this).customer.customerId}<span class="tooltiptext">${_(this).customer.firstName}<br>${_(this).customer.lastName}</span></td>
-            <td class="tooltip">${_(this).car.registrationPlate}<span class="tooltiptext">${_(this).car.carBrand}<br>${_(this).car.carModel}</span></td><td>`
+            <td class="tooltip">${this.customer.customerId}<span class="tooltiptext">${this.customer.firstName}<br>${this.customer.lastName}</span></td>
+            <td class="tooltip">${this.car.registrationPlate}<span class="tooltiptext">${this.car.carBrand}<br>${this.car.carModel}</span></td><td>`
 
             for (const accessory of _(this).accessory_list) {
                 template += `${accessory.item}, `
